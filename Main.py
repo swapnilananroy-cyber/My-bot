@@ -3,6 +3,16 @@ import json
 import random
 import asyncio
 asyncio.set_event_loop(asyncio.new_event_loop())
+import os
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+def keep_alive():
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(('0.0.0.0', port), BaseHTTPRequestHandler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+
+keep_alive()
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
